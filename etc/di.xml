@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<config>
+    <type name="Expressly\Expressly\Model\Application"></type>
+    <type name="Expressly\Expressly\Model\MerchantProvider"></type>
+</config>
