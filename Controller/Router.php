@@ -42,39 +42,43 @@ class Router implements RouterInterface
                         return $this->dispatch($request, 'ping');
                         break;
                     case Registered::getName():
-                        echo 'registered';
-                        $this->registered();
+                        return $this->dispatch($request, 'registered');
                         break;
                     case UserData::getName():
                         $data = $route->getData();
-                        $this->retrieveUserByEmail($data['email']);
+
+                        return $this->dispatch($request, 'user', 'index', $data);
                         break;
                     case CampaignPopup::getName():
                         $data = $route->getData();
-                        $this->migratestart($data['uuid']);
+
+                        return $this->dispatch($request, 'migration', 'popup', $data);
                         break;
                     case CampaignMigration::getName():
                         $data = $route->getData();
-                        $this->migratecomplete($data['uuid']);
+
+                        return $this->dispatch($request, 'migration', 'migrate', $data);
                         break;
                     case BatchCustomer::getName():
-                        $this->batchCustomer();
+                        return $this->dispatch($request, 'batch', 'customer');
                         break;
                     case BatchInvoice::getName():
-                        $this->batchInvoice();
+                        return $this->dispatch($request, 'batch', 'invoice');
                         break;
                 }
             }
 
-//            if (http_response_code() == 401) {
-//
-//            }
+            if (http_response_code() === 401) {
+                return $this->dispatch($request, 'unauthorized');
+            }
         }
+
+        return $this->actionFactory->create('Magento\Framework\App\Action\Forward', ['request' => $request]);
     }
 
-    private function dispatch(&$request, $controller, $data = array())
+    private function dispatch($request, $controller, $action = 'index', $data = array())
     {
-        $request->setModuleName('expressly')->setControllerName($controller)->setActionName('index');
+        $request->setModuleName('expressly')->setControllerName($controller)->setActionName($action);
 
         foreach ($data as $key => $value) {
             $request->setParam($key, $value);
@@ -82,9 +86,6 @@ class Router implements RouterInterface
 
         $request->setDispatched(true);
 
-        return $this->actionFactory->create(
-            'Magento\Framework\App\Action\Forward',
-            ['request' => $request]
-        );
+        return $this->actionFactory->create('Magento\Framework\App\Action\Forward', ['request' => $request]);
     }
 }
