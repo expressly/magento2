@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="expressly" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <label>Expressly</label>
+            <tab>service</tab>
+            <resource>Expressly_Expressly::config_dashboard</resource>
+            <group id="consumer" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Expressly Dashboard</label>
+                <field id="expiration_period" translate="label" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>API Key</label>
+                    <comment>
+                        API Key provided from our
+                        &lt;a href="https://buyexpressly.com/#/install#api"&gt;portal&lt;/a&gt;.
+                        If you do not have an API Key, please follow the previous link for instructions on how
+                        to create one.
+                    </comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
