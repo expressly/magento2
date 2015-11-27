@@ -76,13 +76,13 @@ class Router implements RouterInterface
         return $this->actionFactory->create('Magento\Framework\App\Action\Forward', ['request' => $request]);
     }
 
-    private function dispatch($request, $controller, $action = 'index', $data = array())
+    private function dispatch($request, $controller, $action = 'index', $parameters = array())
     {
-        $request->setModuleName('expressly')->setControllerName($controller)->setActionName($action);
-
-        foreach ($data as $key => $value) {
-            $request->setParam($key, $value);
-        }
+        $request
+            ->setModuleName('expressly')
+            ->setControllerName($controller)
+            ->setActionName($action)
+            ->setParams($parameters);
 
         $request->setDispatched(true);
 
