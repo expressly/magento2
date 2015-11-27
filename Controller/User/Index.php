@@ -13,6 +13,7 @@ use Magento\Customer\Model\CustomerRegistry;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Index extends Action
 {
@@ -21,13 +22,13 @@ class Index extends Action
 
     public function __construct(
         Context $context,
+        StoreManagerInterface $storeManager,
         MerchantCollection $merchantCollection,
         CustomerRegistry $customerRegistry
     ) {
         parent::__construct($context);
-
-        // 1 = store_id
-        $this->merchant = $merchantCollection->getItemById(1)->getMerchant();
+        $website = $storeManager->getWebsite();
+        $this->merchant = $merchantCollection->getItemById($website->getId())->getMerchant();
         $this->customerRegistry = $customerRegistry;
     }
 
@@ -64,6 +65,7 @@ class Index extends Action
                         ->setAddress2($magentoAddress->getStreetLine(2))
                         ->setCity($magentoAddress->getCity())
                         ->setStateProvince($magentoAddress->getRegion())
+                        ->setZip($magentoAddress->getPostcode())
                         ->setCountry($magentoAddress->getCountry());
 
                     $phone = new Phone();
