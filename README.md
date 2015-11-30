@@ -5,7 +5,7 @@ Learn more at [https://www.buyexpressly.com](https://www.buyexpressly.com), wher
 
 ### Installation steps:
 
-1. ``composer require expressly/magento2`  
+1. `composer require expressly/magento2`  
 2. `bin/magento module:enable Expressly_Expressly`  
 3. 
     If you only have a single store:  
