@@ -3,6 +3,7 @@
 namespace Expressly\Expressly\Controller;
 
 use Expressly\Entity\Route;
+use Expressly\Event\ResponseEvent;
 use Expressly\Expressly\Model\Application;
 use Expressly\Route\BatchCustomer;
 use Expressly\Route\BatchInvoice;
@@ -11,6 +12,7 @@ use Expressly\Route\CampaignPopup;
 use Expressly\Route\Ping;
 use Expressly\Route\Registered;
 use Expressly\Route\UserData;
+use Magento\Framework\App\Action\Forward;
 use Magento\Framework\App\ActionFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
@@ -73,7 +75,7 @@ class Router implements RouterInterface
             }
         }
 
-        return $this->actionFactory->create('Magento\Framework\App\Action\Forward', ['request' => $request]);
+//        return $this->actionFactory->create(Forward::class, ['request' => $request]);
     }
 
     private function dispatch($request, $controller, $action = 'index', $parameters = array())
@@ -86,6 +88,27 @@ class Router implements RouterInterface
 
         $request->setDispatched(true);
 
-        return $this->actionFactory->create('Magento\Framework\App\Action\Forward', ['request' => $request]);
+        return $this->actionFactory->create(Forward::class, ['request' => $request]);
+    }
+
+
+    public static function processError(ResponseEvent $event)
+    {
+        $content = $event->getContent();
+        $message = array(
+            $content['description']
+        );
+
+        $addBulletPoints = function ($data, $header) use (&$message) {
+            $message[] = $header;
+            foreach ($data as $point) {
+                $message[] = $point;
+            }
+        };
+
+        $addBulletPoints($content['causes'], 'Possible Causes:');
+        $addBulletPoints($content['actions'], 'Possible Actions:');
+
+        return implode(',', $message);
     }
 }

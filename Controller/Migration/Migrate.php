@@ -6,6 +6,7 @@ use Expressly\Event\CustomerMigrateEvent;
 use Expressly\Event\ResponseEvent;
 use Expressly\Exception\GenericException;
 use Expressly\Exception\UserExistsException;
+use Expressly\Expressly\Controller\Router;
 use Expressly\Expressly\Model\Application;
 use Expressly\Expressly\Model\ResourceModel\Merchant\Collection;
 use Expressly\Presenter\PingPresenter;
@@ -69,7 +70,7 @@ class Migrate extends Action
                     throw new UserExistsException();
                 }
 
-                throw new GenericException($this->processError($event));
+                throw new GenericException(Router::processError($event));
             }
 
             // if customer exists
@@ -149,25 +150,5 @@ class Migrate extends Action
         if ($exists) {
             // show exists popup
         }
-    }
-
-    public function processError(ResponseEvent $event)
-    {
-        $content = $event->getContent();
-        $message = array(
-            $content['description']
-        );
-
-        $addBulletPoints = function ($data, $header) use (&$message) {
-            $message[] = $header;
-            foreach ($data as $point) {
-                $message[] = $point;
-            }
-        };
-
-        $addBulletPoints($content['causes'], 'Possible Causes:');
-        $addBulletPoints($content['actions'], 'Possible Actions:');
-
-        return implode(',', $message);
     }
 }
