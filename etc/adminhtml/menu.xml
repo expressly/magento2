@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:Magento/Backend/etc/menu.xsd">
+    <menu>
+        <add id="Expressly_Expressly::dashboard" title="Expressly" module="Expressly_Expressly" sortOrder="26"
+             resource="Expressly_Expressly::dashboard"/>
+        <add id="Expressly_Expressly::dashboard_view" title="Dashboard" module="Expressly_Expressly" sortOrder="1"
+             parent="Expressly_Expressly::dashboard" resource="Expressly_Expressly::dashboard_view"
+             action="expresslyadmin/dashboard"/>
+    </menu>
+</config>
