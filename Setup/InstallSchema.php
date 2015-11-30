@@ -46,13 +46,22 @@ class InstallSchema implements InstallSchemaInterface
                 'Expressly API Key'
             )
             ->addColumn(
-                'merchant_url',
+                'host',
                 Table::TYPE_TEXT,
                 255,
                 [
                     'nullable' => false
                 ],
                 'Base url'
+            )
+            ->addColumn(
+                'path',
+                Table::TYPE_TEXT,
+                255,
+                [
+                    'nullable' => false
+                ],
+                'Path to execution'
             );
 
         $installer->getConnection()->createTable($table);
