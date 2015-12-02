@@ -1,9 +1,7 @@
 <?php
 
 /**
- *
- *
- * @author Expressly Team <core@magentocommerce.com>
+ * @author Expressly Team <info@buyexpressly.com>
  */
 namespace Expressly\Expressly\Model\Config\Backend;
 
@@ -25,6 +23,11 @@ class Register extends \Magento\Framework\App\Config\Value
     protected $_messageManager;
 
     /**
+     * @var \Expressly\Expressly\Model\Application
+     */
+    protected $_application;
+
+    /**
      * Register constructor.
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
@@ -43,11 +46,29 @@ class Register extends \Magento\Framework\App\Config\Value
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Expressly\Expressly\Model\Application $application,
         array $data = []
     ) {
         $this->_messageManager = $messageManager;
+        $this->_application    = $application;
 
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
+    }
+
+    /**
+     * @return \Magento\Framework\Message\ManagerInterface
+     */
+    public function getMessageManager()
+    {
+        return $this->_messageManager;
+    }
+
+    /**
+     * @return \Expressly\Expressly\Model\Application
+     */
+    public function getApplication()
+    {
+        return $this->_application;
     }
 
     /**
@@ -55,6 +76,22 @@ class Register extends \Magento\Framework\App\Config\Value
      */
     public function afterSave()
     {
-        $this->_messageManager->addError(__('MERCHANT_REGISTER'));
+        $app = $this->getApplication()->getApp();
+
+        $provider   = $app['merchant.provider'];
+        $dispatcher = $app['dispatcher'];
+
+        $merchant = $provider->getMerchant();
+        $event = new PasswordedEvent($merchant);
+        try {
+            $dispatcher->dispatch(MerchantSubscriber::MERCHANT_REGISTER, $event);
+            if (!$event->isSuccessful()) {
+                throw new InvalidAPIKeyException();
+            }
+            $this->getMessageManager()->addSuccess('MERCHANT_REGISTER');
+        } catch (\Exception $e) {
+            $app['logger']->error(ExceptionFormatter::format($e));
+            $this->getMessageManager()->addError(__('Your values could not be transmitted to the server. Please try resubmitting, or contacting info@buyexpressly.com'));
+        }
     }
 }

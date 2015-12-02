@@ -5,17 +5,17 @@ namespace Expressly\Expressly\Model;
 use Expressly\Entity\Merchant;
 use Expressly\Expressly\Model\ResourceModel\Merchant as MerchantResourceModel;
 use Expressly\Provider\MerchantProviderInterface;
-use Magento\Framework\Model\AbstractModel;
 
-class MerchantProvider extends AbstractModel implements MerchantProviderInterface
+class MerchantProvider implements MerchantProviderInterface
 {
     const COLUMN_API_KEY = 'api_key';
     const COLUMN_HOST = 'host';
     const COLUMN_PATH = 'path';
 
-    protected function _construct()
-    {
-        $this->_init(MerchantResourceModel::class);
+    public function __construct(
+        \Magento\Framework\App\Config\ScopeConfigInterface $config
+    ) {
+        $this->_config = $config;
     }
 
     public function setMerchant(Merchant $merchant)
@@ -31,9 +31,9 @@ class MerchantProvider extends AbstractModel implements MerchantProviderInterfac
     {
         $merchant = new Merchant();
         $merchant
-            ->setApiKey($this->getData(self::COLUMN_API_KEY))
-            ->setHost($this->getData(self::COLUMN_HOST))
-            ->setPath($this->getData(self::COLUMN_PATH));
+            ->setApiKey($this->_config->getValue('expressly/consumer/'.self::COLUMN_API_KEY))
+            ->setHost($this->_config->getValue('expressly/consumer/'.self::COLUMN_HOST))
+            ->setPath($this->_config->getValue('expressly/consumer/'.self::COLUMN_PATH));
 
         return $merchant;
     }

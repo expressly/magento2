@@ -7,7 +7,7 @@
             <resource>Expressly_Expressly::config_dashboard</resource>
             <group id="consumer" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Expressly Settings</label>
-                <field id="api_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="api_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>API Key</label>
                     <comment><![CDATA[
                         API Key provided from our
@@ -16,6 +16,18 @@
                         to create one.
                     ]]></comment>
                     <backend_model>Expressly\Expressly\Model\Config\Backend\Register</backend_model>
+                </field>
+                <field id="host" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Host</label>
+                    <comment><![CDATA[
+                        host description
+                    ]]></comment>
+                </field>
+                <field id="path" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Path</label>
+                    <comment><![CDATA[
+                        path description
+                    ]]></comment>
                 </field>
             </group>
         </section>
